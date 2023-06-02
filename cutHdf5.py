@@ -5,17 +5,15 @@
 
 import numpy as np
 import h5py
-import json
+import geos_json
 import math
 import scipy.ndimage as nd
 import matplotlib.pyplot as plt
 from matplotlib import rcParams
-
+from matplotlib.widgets import Slider
 
 # get data
-
-with open('data.json') as f:
-  data = json.load(f)
+data = geos_json.getData("data.json")
 
 # get results
 f=h5py.File('pressure_history.hdf5')
@@ -24,56 +22,37 @@ f.close()
 
 print(p.shape)
 
-# p=np.reshape(p,(5,188,200,200))
-# print(p.shape)
+ndt = 1000#data["ndt"]
+nx = 51#data["nx_elem"] +1
+ny = 51#data["ny_elem"] +1
+nz = 51#data["nz_elem"] +1
 
-# # matplotlib inline
+p=np.reshape(p,(ndt, nx,ny,nz))
+print(p.shape)
 
-# dt=0.002
-# ix=100
-# iy=100
-# iz=100
-# vmax=0.1
+# indices to apply the cut (here: on the source point, in the middle)
+ix = int(np.floor(nx/2))
+iy = int(np.floor(ny/2))
+iz = int(np.floor(nz/2))
 
-# nt=p.shape[0]
-# nx=p.shape[1]
-# ny=p.shape[2]
-# nz=p.shape[3]
-# ixmin=15
-# ixmax=nx-1-ixmin
-# iymin=15
-# iymax=ny-1-iymin
-# izmin=15
-# izmax=nz-1-izmin
+# Save data to reduce size
 
-# def plotWfld(d,it,output="figure",save=False):
+np.save("pyz", p[:,ix,:,:])
+np.save("pxz", p[:,:,iy,:])
+np.save("pxy", p[:,:,:,iz])
 
-#     time=it*dt
-#     plt.figure(figsize=(16,6))
-#     plt.subplot(1,3,1)
-#     plt.imshow(np.transpose(p[it,ix,:,:]),vmin=-vmax,vmax=vmax,cmap='seismic')
-#     #plt.hlines((izmin,izmax),iymin,iymax,LineStyle='--')
-#     #plt.vlines((iymin,iymax),izmin,izmax,LineStyle='--')
-#     plt.xlabel("Y")
-#     plt.ylabel("Z")
-#     plt.title(r"X-slice @ %0.2f sec" %time)
+# pyz = p[:,ix,:,:]
+# pxz = p[:,:,iy,:]
+# pxy = p[:,:,:,iz]
 
-#     plt.subplot(1,3,2)
-#     plt.imshow(np.transpose(p[it,:,iy,:]),vmin=-vmax,vmax=vmax,cmap='seismic')
-#     #plt.hlines((izmin,izmax),ixmin,ixmax,LineStyle='--')
-#     #plt.vlines((ixmin,ixmax),izmin,izmax,LineStyle='--')
-#     plt.xlabel("X")
-#     plt.ylabel("Z")
-#     plt.title(r"Y-slice @ %0.2f sec" %time)
+# update json data
 
-#     plt.subplot(1,3,3)
-#     plt.imshow(np.transpose(p[it,:,:,iz]),vmin=-vmax,vmax=vmax,cmap='seismic')
-#     #plt.hlines((iymin,iymax),ixmin,ixmax,LineStyle='--')
-#     #plt.vlines((ixmin,ixmax),iymin,iymax,LineStyle='--')
-#     plt.xlabel("X")
-#     plt.ylabel("Y")
-#     plt.title(r"Z-slice @ %0.2f sec" %time)
+data["ix"] = ix
+data["iy"] = iy
+data["iz"] = iz
+data["nx"] = nx
+data["ny"] = ny
+data["nz"] = nz
+data["ndt"] = ndt
 
-#     plt.tight_layout()
-#     if save==True:
-#         plt.savefig("./fig/"+output+"_%d" %it)
+geos_json.write("data.json", data)

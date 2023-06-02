@@ -2,8 +2,6 @@
 import numpy as np
 import json
 
-
-
 def write_on_xml(data):
   print('Writing vti.xml')
   xml = open('vti.xml', 'w' ,encoding="utf-8")
@@ -251,10 +249,3 @@ def writebase(data):
   xml.close()
 
 
-
-
-with open('data.json') as f:
-  data = json.load(f)
-
-write_on_xml(data)
-writebase(data)

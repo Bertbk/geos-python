@@ -74,5 +74,5 @@ print("nx_elem = " + str(nx_elem))
 print("ny_elem = " + str(ny_elem))
 print("nz_elem = " + str(nz_elem))
 
-data = geos_json.getData(xmax,xmin,ymax,ymin,zmax,zmin,nx_elem,ny_elem,nz_elem, delta, eps, vti_f,xs,ys,zs, f,cfl_factor, Tmax, dt, ndt, vp,vh,vn, box_eps)
+data = geos_json.setData(xmax,xmin,ymax,ymin,zmax,zmin,nx_elem,ny_elem,nz_elem, delta, eps, vti_f,xs,ys,zs, f,cfl_factor, Tmax, dt, ndt, vp,vh,vn, box_eps)
 geos_json.write("data.json", data)

@@ -1,6 +1,6 @@
 import json
 
-def getData(xmax,xmin,ymax,ymin,zmax,zmin,nx_elem,ny_elem,nz_elem, delta, eps, vti_f,xs,ys,zs, f,cfl_factor, Tmax, dt, ndt, vp,vh,vn,box_eps):
+def setData(xmax,xmin,ymax,ymin,zmax,zmin,nx_elem,ny_elem,nz_elem, delta, eps, vti_f,xs,ys,zs, f,cfl_factor, Tmax, dt, ndt, vp,vh,vn,box_eps):
   data = {}
   data["xmax"] = xmax
   data["xmin"] = xmin
@@ -26,8 +26,13 @@ def getData(xmax,xmin,ymax,ymin,zmax,zmin,nx_elem,ny_elem,nz_elem, delta, eps, v
   data["vh"] = vh
   data["vn"] = vn
   data["box_eps"] =box_eps
-  return data;
+  return data
 
 def write(filename, data):
   with open(filename, 'w', encoding='utf-8') as f:
       json.dump(data, f, ensure_ascii=False, indent=4)
+
+def getData(filename):
+  with open(filename) as f:
+    data = json.load(f)
+  return data

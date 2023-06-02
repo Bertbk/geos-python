@@ -1,0 +1,6 @@
+*.hdf5
+*.xml
+*.ipynb
+*.npy
+*.json
+__pycache__/**
