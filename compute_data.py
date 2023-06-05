@@ -1,13 +1,16 @@
 #! /usr/bin/python3
 
+# exec(open("./makexml.py").read())
+
+
 import argparse
 import numpy as np
 import json
 
-parser = argparse.ArgumentParser(description='Automatic computation of data (dt, element size, ..) from a JSON file (containing: xmax,xmin,ymax,ymin,zmax,zmin, vp, f, delta, eps, vti_f). Warning: override JSON file!')
-parser.add_argument('-o', help='input and output json filename', default="data.json", required=True)
+parser = argparse.ArgumentParser(description='Automatic computation of some parameters (dt, element size, ..) from a JSON file (containing: xmax,xmin,ymax,ymin,zmax,zmin, vp, f, delta, eps, vti_f). Warning: override JSON file!')
+parser.add_argument('-f', help='output json filename', default="data.json", required=True)
 args = parser.parse_args()
-filename = args.o
+filename = args.f
 
 with open(filename) as f:
   data = json.load(f)
@@ -81,10 +84,7 @@ data["dt"]         = dt
 data["ndt"]        = ndt 
 data["nx_elem"]    = nx_elem 
 data["ny_elem"]    = ny_elem 
-data["nz_elem"]    = nz_elem
-data["nx"]         = nx_elem +1
-data["ny"]         = ny_elem +1
-data["nz"]         = nz_elem +1
+data["nz_elem"]    = nz_elem 
 data["box_eps"]    = box_eps 
 data["omega"]      = omega
 data["wavenumber"] = k
