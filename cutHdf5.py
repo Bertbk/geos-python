@@ -15,7 +15,7 @@ from matplotlib.widgets import Slider
 
 parser = argparse.ArgumentParser(description='Cut a hdf5 file using JSON data. Warning: override of JSON file')
 parser.add_argument('-json', help='input/output json filename', default="data.json")
-aarser.add_argument('-i', help='input hdf5 filename', default='pressure_history.hdf5')
+parser.add_argument('-i', help='input hdf5 filename', default='pressure_history.hdf5')
 args = parser.parse_args()
 jsonfile = args.json
 hdf5file = args.i
