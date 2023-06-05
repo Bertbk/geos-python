@@ -85,6 +85,6 @@ def update(val):
     plotWfld(pyz,pxz,pxy,fig,ax,current_time,output="figure",save=False)
     fig.canvas.draw_idle()
 
-plotWfld(pyz,pxz,pxy,fig, ax, 500,output="figure",save=False)
+plotWfld(pyz,pxz,pxy,fig, ax, int(ndt/2),output="figure",save=False)
 time_slide.on_changed(update)
 plt.show()
