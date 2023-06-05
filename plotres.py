@@ -81,7 +81,7 @@ def plotWfld(dyz,dxz,dxy,fig, ax, it,output="figure",save=False):
   ax[2].set_xlim([xmin, xmax])
   ax[2].set_ylim([ymin, ymax])
 
-  fig.tight_layout()
+#  fig.tight_layout()
   if save==True:
       plt.savefig("./fig/"+output+"_%d" %it)
 
