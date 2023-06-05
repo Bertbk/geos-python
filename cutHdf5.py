@@ -7,11 +7,6 @@ import argparse
 import numpy as np
 import json
 import h5py
-import math
-import scipy.ndimage as nd
-import matplotlib.pyplot as plt
-from matplotlib import rcParams
-from matplotlib.widgets import Slider
 
 parser = argparse.ArgumentParser(description='Cut a hdf5 file using JSON data. Warning: override of JSON file')
 parser.add_argument('-json', help='input/output json filename', default="data.json")
