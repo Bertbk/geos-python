@@ -49,7 +49,7 @@ Tmax = np.minimum(Tmax, 1)
 print('Tmax = ', Tmax)
 
 # Wavenumber and wavelength
-omega = 2*np.pi*f
+omega = 2*np.pi*f*2.5
 k = omega / vmax
 wavelength = 2*np.pi/k
 
@@ -82,9 +82,6 @@ data["ndt"]        = ndt
 data["nx_elem"]    = nx_elem 
 data["ny_elem"]    = ny_elem 
 data["nz_elem"]    = nz_elem
-data["nx"]         = nx_elem +1
-data["ny"]         = ny_elem +1
-data["nz"]         = nz_elem +1
 data["box_eps"]    = box_eps 
 data["omega"]      = omega
 data["wavenumber"] = k

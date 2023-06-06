@@ -28,9 +28,9 @@ print("p old shape = " + str(p.shape))
 
 #get dimension
 ndt = p.shape[0] #data["ndt"] might be wrong due to GEOS computing !
-nx = data["nx"]
-ny = data["ny"]
-nz = data["nz"]
+nx = data["nx_elem"] + 1
+ny = data["ny_elem"] + 1
+nz = data["nz_elem"] + 1
 
 p=np.reshape(p,(ndt, nx,ny,nz))
 print("p new shape = " + str(p.shape))

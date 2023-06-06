@@ -24,9 +24,9 @@ with open(jsonfile) as f:
 
 ndt = data["ndt"]
 dt = data["dt"]
-nx = data["nx"]
-ny = data["ny"]
-nz = data["nz"]
+nx = data["nx_elem"] + 1
+ny = data["ny_elem"] + 1
+nz = data["nz_elem"] + 1
 
 xmin = data["xmin"]
 xmax = data["xmax"]
