@@ -54,8 +54,10 @@ k = omega / vmax
 wavelength = 2*np.pi/k
 
 # CFL, Space and Time steps (Dx and Dt)
+nlambda = data["nlambda"]
+
 cfl_factor = 0.25
-dx = wavelength / 10
+dx = wavelength / nlambda
 dt = np.around(cfl_factor*dx/vmax, decimals = 4)
 ndt = int(Tmax / dt)
 

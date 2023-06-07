@@ -33,6 +33,8 @@ data["delta"] = 0.1
 data["eps"] = 0.24
 data["vti_f"] = 1
 
+data["nlambda"] = 15 # number of point per wavelength
+
 data["nx_elem"] = -1
 data["ny_elem"] = -1
 data["nz_elem"] = -1
