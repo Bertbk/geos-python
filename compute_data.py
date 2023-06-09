@@ -59,7 +59,6 @@ nlambda = data["nlambda"]
 cfl_factor = 0.25
 dx = wavelength / nlambda
 dt = np.around(cfl_factor*dx/vmax, decimals = 4)
-ndt = int(Tmax / dt)
 
 # Number of hexa in each dimension
 nx_elem = int((xmax-xmin)/dx)
@@ -71,7 +70,6 @@ box_eps = np.minimum(0.1, np.around(dx/10, decimals = 1))
 print("Summary :")
 print("Tmax = " + str(Tmax))
 print("dt = " + str(dt))
-print("ndt = " + str(ndt))
 print("nx_elem = " + str(nx_elem))
 print("ny_elem = " + str(ny_elem))
 print("nz_elem = " + str(nz_elem))
@@ -80,7 +78,6 @@ print("nz_elem = " + str(nz_elem))
 data["cfl_factor"] = cfl_factor 
 data["dx"]         = dx
 data["dt"]         = dt 
-data["ndt"]        = ndt 
 data["nx_elem"]    = nx_elem 
 data["ny_elem"]    = ny_elem 
 data["nz_elem"]    = nz_elem
@@ -89,6 +86,8 @@ data["omega"]      = omega
 data["wavenumber"] = k
 data["wavelength"] = wavelength
 data["Tmax"]       = Tmax
+data["dt_hdf5"]    = 2*dt
+data["dt_vtk"]     = 2*dt
 
 # write data
 

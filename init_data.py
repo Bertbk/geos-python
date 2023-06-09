@@ -41,10 +41,11 @@ data["nz_elem"] = -1
 data["cfl_factor"] = -1
 data["Tmax"] = -1
 data["dt"] = -1
-data["ndt"] = -1
 data["vh"] = -1
 data["vn"] = -1
 data["box_eps"] =-1
+data["dt_hdf5"] = -1
+data["dt_vtk"] = -1
 
 with open(output_file, 'w', encoding='utf-8') as f:
   json.dump(data, f, ensure_ascii=False, indent=4)

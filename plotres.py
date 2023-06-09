@@ -22,8 +22,7 @@ jsonfile = args.json
 with open(jsonfile) as f:
   data = json.load(f)
 
-ndt = data["ndt"]
-dt = data["dt"]
+dt = data["dt_hdf5"]
 nx = data["nx_elem"] + 1
 ny = data["ny_elem"] + 1
 nz = data["nz_elem"] + 1
