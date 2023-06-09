@@ -66,7 +66,7 @@ Tmax = np.around(np.minimum(Th, Tn), decimals = 3)
 Tmax = np.minimum(Tmax, 1)
 # round from dt
 print('Tmax = ', Tmax)
-Tmax = int(Tmax/dt)*(dt+1)
+Tmax = int(Tmax/dt)*(dt)
 Tmax = np.around(Tmax, decimals=4)
 
 # Number of hexa in each dimension
