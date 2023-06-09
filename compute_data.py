@@ -26,7 +26,13 @@ vp = data["vp"]
 # Thomsen parameters
 delta = data["delta"]
 eps   = data["eps"]
-vti_f = data["vti_f"]
+sigma = data["sigma"]
+if(sigma > 0):
+  vs2 = (vp*vp)/(sigma)*(eps - delt)
+else:
+  vs2 = data["vs"]* data["vs"]
+vti_f = 1 - vs2/(vp*vp)
+data["vti_f"] = vti_f
 
 # Compute size of element
 # Horizontal vh and vertical vn velocity

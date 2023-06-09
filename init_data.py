@@ -31,6 +31,8 @@ data["vp"] = 3000
 # Thomsen parameters
 data["delta"] = 0.1
 data["eps"] = 0.24
+data["sigma"] = -1
+data["vs"]    = 0
 data["vti_f"] = 1
 
 data["nlambda"] = 15 # number of point per wavelength
@@ -46,6 +48,7 @@ data["vn"] = -1
 data["box_eps"] =-1
 data["dt_hdf5"] = -1
 data["dt_vtk"] = -1
+
 
 with open(output_file, 'w', encoding='utf-8') as f:
   json.dump(data, f, ensure_ascii=False, indent=4)
