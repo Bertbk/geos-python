@@ -5,7 +5,7 @@ import numpy as np
 import json
 
 parser = argparse.ArgumentParser(description='Automatic computation of data (dt, element size, ..) from a JSON file (containing: xmax,xmin,ymax,ymin,zmax,zmin, vp, f, delta, eps, vti_f). Warning: override JSON file!')
-parser.add_argument('-o', help='input and output json filename', default="data.json", required=True)
+parser.add_argument('-o', help='input and output json filename', default="data.json")
 args = parser.parse_args()
 filename = args.o
 
@@ -28,7 +28,7 @@ delta = data["delta"]
 eps   = data["eps"]
 sigma = data["sigma"]
 if(sigma > 0):
-  vs2 = (vp*vp)/(sigma)*(eps - delt)
+  vs2 = (vp*vp)/(sigma)*(eps - delta)
 else:
   vs2 = data["vs"]* data["vs"]
 vti_f = 1 - vs2/(vp*vp)
