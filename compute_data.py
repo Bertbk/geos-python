@@ -42,17 +42,6 @@ vn = vp*np.sqrt(1+2*delta)
 # max velocity
 vmax = np.maximum(vh,vn)
 
-# Tmax
-# Automatic (when wave touch borders)
-min_horiz_dist= np.min([np.abs(xmax),np.abs(ymax), np.abs(xmin), np.abs(ymin)])
-Th = min_horiz_dist / vh # time to reach horizontal border
-min_vert_dist= np.minimum(np.abs(zmax),np.abs(zmin))
-Tn = min_vert_dist / vn # time to reach top or bottom border
-
-# Choose T max such that wave just reach border (but less than 1 seconds)
-Tmax = np.around(np.minimum(Th, Tn), decimals = 3)
-Tmax = np.minimum(Tmax, 1)
-print('Tmax = ', Tmax)
 
 # Wavenumber and wavelength
 omega = 2*np.pi*f*2.5
@@ -65,6 +54,19 @@ nlambda = data["nlambda"]
 cfl_factor = 0.25
 dx = wavelength / nlambda
 dt = np.around(cfl_factor*dx/vmax, decimals = 4)
+
+# Tmax
+# Automatic (when wave touch borders)
+min_horiz_dist= np.min([np.abs(xmax),np.abs(ymax), np.abs(xmin), np.abs(ymin)])
+Th = min_horiz_dist / vh # time to reach horizontal border
+min_vert_dist= np.minimum(np.abs(zmax),np.abs(zmin))
+Tn = min_vert_dist / vn # time to reach top or bottom border
+# Choose T max such that wave just reach border (but less than 1 seconds)
+Tmax = np.around(np.minimum(Th, Tn), decimals = 3)
+Tmax = np.minimum(Tmax, 1)
+# round from dt
+Tmax = int(Tmax/dt)*(dt+1)
+print('Tmax = ', Tmax)
 
 # Number of hexa in each dimension
 nx_elem = int((xmax-xmin)/dx)
