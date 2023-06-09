@@ -65,7 +65,7 @@ Tn = min_vert_dist / vn # time to reach top or bottom border
 Tmax = np.around(np.minimum(Th, Tn), decimals = 3)
 Tmax = np.minimum(Tmax, 1)
 # round from dt
-Tmax = int(Tmax/dt)*(dt+1)
+Tmax = np.around(Tmax/dt,decimals = 4)*(dt+1)
 print('Tmax = ', Tmax)
 
 # Number of hexa in each dimension
