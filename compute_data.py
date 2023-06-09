@@ -29,9 +29,12 @@ eps   = data["eps"]
 sigma = data["sigma"]
 if(sigma > 0):
   vs2 = (vp*vp)/(sigma)*(eps - delta)
+  vs = np.sqrt(vs2)
+  data["vs"] = vs
 else:
   vs2 = data["vs"]* data["vs"]
 vti_f = 1 - vs2/(vp*vp)
+data["vti_f"] = vti_f
 data["vti_f"] = vti_f
 
 # Compute size of element
