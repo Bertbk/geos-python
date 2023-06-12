@@ -71,6 +71,7 @@ Tmax = np.minimum(Tmax, 1)
 print('Tmax = ', Tmax)
 Tmax = int(Tmax/dt)*(dt)
 Tmax = np.around(Tmax, decimals=4)
+ndt_approx = int(Tmax/dt)
 
 # Number of hexa in each dimension
 nx_elem = int((xmax-xmin)/dx)
@@ -85,6 +86,7 @@ print("dt = " + str(dt))
 print("nx_elem = " + str(nx_elem))
 print("ny_elem = " + str(ny_elem))
 print("nz_elem = " + str(nz_elem))
+print("ndt_approx = " + str(ndt_approx))
 
 # update data
 data["cfl_factor"] = cfl_factor 
@@ -100,6 +102,7 @@ data["wavelength"] = wavelength
 data["Tmax"]       = Tmax
 data["dt_hdf5"]    = 2*dt
 data["dt_vtk"]     = 2*dt
+data["ndt_approx"] = ndt_approx
 
 # write data
 
