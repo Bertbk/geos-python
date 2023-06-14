@@ -9,7 +9,7 @@ import json
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import rcParams
-rcParams['font.size'] = 10
+rcParams['font.size'] = 12
 px = 1/plt.rcParams['figure.dpi']  # pixel in inches
 # get data
 parser = argparse.ArgumentParser(description='Cut a hdf5 file using JSON data. Warning: override of JSON file')
