@@ -10,7 +10,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import rcParams
 rcParams['font.size'] = 10
-
+px = 1/plt.rcParams['figure.dpi']  # pixel in inches
 # get data
 parser = argparse.ArgumentParser(description='Cut a hdf5 file using JSON data. Warning: override of JSON file')
 parser.add_argument('-json', help='input json filename', default="data.json")
@@ -58,7 +58,7 @@ it = np.minimum(int(time_target/dt), ndt-2)
 time = it*dt
 vmax=np.percentile(np.abs(pxz[it,::]), 99.5)
 
-fig, ax = plt.subplots()
+fig, ax = plt.subplots(figsize=(800*px, 600*px))
 pos = ax.imshow(np.transpose(pxz[it,:,:]),vmin=-vmax,vmax=vmax,cmap='seismic', extent=[xmin, xmax, zmin, zmax])
 ax.tick_params('both', length=2, width=0.5, which='major',labelsize=10)
 ax.set_title("GEOS: Wavefield at t="+str(format(time*1000., '.2f'))+"ms with sigma="+str(sigma),fontsize=10)
