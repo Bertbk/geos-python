@@ -10,7 +10,7 @@ px = 1/plt.rcParams['figure.dpi']  # pixel in inches
 
 # NBVAL_IGNORE_OUTPUT   
 nx = 601
-ny = 101
+ny = 601
 nz = 601
 shape   = (nx,ny,nz) 
 spacing = (10.,10.,10.) # spacing of 10 meters
@@ -47,7 +47,7 @@ m = model.m
 
 # Compute the dt and set time range
 t0 = 0.   #  Simulation time start
-tn = 500. #  Simulation time end (0.15 second = 150 msec)
+tn = 840. #  Simulation time end (0.15 second = 150 msec)
 dt = model.critical_dt
 # dt = (dvalue/(np.pi*vmax))*np.sqrt(1/(1+etamax*(max_cos_sin)**2)) # eq. above (cell 3)
 time_range = TimeAxis(start=t0,stop=tn,step=dt)
@@ -56,7 +56,7 @@ print("time_range; ", time_range)
 # NBVAL_IGNORE_OUTPUT
 
 # time stepping 
-p = TimeFunction(name="p", grid=model.grid, time_order=torder, space_order=sorder, save=time_range.num)
+p = TimeFunction(name="p", grid=model.grid, time_order=torder, space_order=sorder)#, save=time_range.num)
 q = TimeFunction(name="q", grid=model.grid, time_order=torder, space_order=sorder) # space order 4?
 
 # Main equations
@@ -108,7 +108,7 @@ plt_extent = [origin_pad[0] - extent_pad[0]/2, origin_pad[0] + extent_pad[0]/2,
 time_target = 820
 iy = int(ny/2)
 ndt = p.data.shape[0]
-it = np.minimum(int(time_target/dt), ndt-1)
+it = 1 #np.minimum(int(time_target/dt), ndt-1)
 time = it*dt
 print(str(it))
 amax1 = 0.05 * np.max(np.abs(p.data[it,:,:]))
