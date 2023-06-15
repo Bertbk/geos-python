@@ -45,10 +45,37 @@ delta = model.delta
 epsilon = model.epsilon
 m = model.m
 
+# Compute Tmax (just before wave reach border)
+vh = vp*np.sqrt(1+2*eps)
+vn = vp*np.sqrt(1+2*delta)
+# max velocity
+vmax = np.maximum(vh,vn)
+# dimension length
+xmax = (nx * spacing[0])/2
+xmin = -xmax
+ymax = (ny * spacing[1])/2
+ymin = -ymax
+zmax = (nz * spacing[2])/2
+zmin = -zmax
+min_horiz_dist= np.min([np.abs(xmax),np.abs(ymax), np.abs(xmin), np.abs(ymin)])
+#Time before wave reaches border
+Th = min_horiz_dist / vh # time to reach horizontal border
+min_vert_dist= np.minimum(np.abs(zmax),np.abs(zmin))
+Tn = min_vert_dist / vn # time to reach top or bottom border
+# Choose T max such that wave just reach border (but less than 1 seconds)
+Tmax = np.around(np.minimum(Th, Tn), decimals = 3)
+Tmax = np.minimum(Tmax, 1)
+# round from dt
+
 # Compute the dt and set time range
 t0 = 0.   #  Simulation time start
 tn = 840. #  Simulation time end (0.15 second = 150 msec)
 dt = model.critical_dt
+# round Tmax to be a multiple of dt
+Tmax = int(Tmax/dt)*(dt) 
+Tmax = np.around(Tmax, decimals=4)
+print('Tmax = ', Tmax)
+
 # dt = (dvalue/(np.pi*vmax))*np.sqrt(1/(1+etamax*(max_cos_sin)**2)) # eq. above (cell 3)
 time_range = TimeAxis(start=t0,stop=tn,step=dt)
 print("time_range; ", time_range)
