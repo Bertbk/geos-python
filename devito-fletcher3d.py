@@ -9,14 +9,14 @@ rcParams['font.size'] = 12
 px = 1/plt.rcParams['figure.dpi']  # pixel in inches
 
 # NBVAL_IGNORE_OUTPUT   
-nx = 101
+nx = 601
 ny = 101
-nz = 101
+nz = 601
 shape   = (nx,ny,nz) 
 spacing = (10.,10.,10.) # spacing of 10 meters
 origin  = (0.,0.,0.)  
 nbl = 0  # number of pad points
-sorder=8
+sorder=2
 torder=2
 
 # # initialize Thomsem parameters to those used in Mu et al., (2020)
@@ -47,7 +47,7 @@ m = model.m
 
 # Compute the dt and set time range
 t0 = 0.   #  Simulation time start
-tn = 2000. #  Simulation time end (0.15 second = 150 msec)
+tn = 500. #  Simulation time end (0.15 second = 150 msec)
 dt = model.critical_dt
 # dt = (dvalue/(np.pi*vmax))*np.sqrt(1/(1+etamax*(max_cos_sin)**2)) # eq. above (cell 3)
 time_range = TimeAxis(start=t0,stop=tn,step=dt)
@@ -59,15 +59,9 @@ print("time_range; ", time_range)
 p = TimeFunction(name="p", grid=model.grid, time_order=torder, space_order=sorder, save=time_range.num)
 q = TimeFunction(name="q", grid=model.grid, time_order=torder, space_order=sorder) # space order 4?
 
-#Fletcher
-# fm1 = -(eps - delta)/sigma = vti_f - 1
-# term1_p_f = (1 + 2*epsilon)*(p.dx2) + q.dy2 - fm1*(p.dy2-q.dy2)
-# term1_q_f = (1 + 2*delta)*(p.dx2)   + q.dy2 + fm1*(p.dx2-q.dx2)
-
 # Main equations
 term_p = (1 + 2*epsilon)*(p.dx2 + p.dy2) + q.dz2 - (vti_f - 1)*(p.dz2 - q.dz2)
 term_q = (1 + 2*delta)*(p.dx2 + p.dy2)   + q.dz2 + (vti_f - 1)*(p.dx2  + p.dy2 - q.dx2  - q.dy2)
-
 
 stencil_p = solve(m*p.dt2 - term_p, p.forward)
 update_p = Eq(p.forward, stencil_p)
@@ -113,7 +107,8 @@ plt_extent = [origin_pad[0] - extent_pad[0]/2, origin_pad[0] + extent_pad[0]/2,
 
 time_target = 820
 iy = int(ny/2)
-it = int(time_target/dt) + 1
+ndt = p.data.shape[0]
+it = np.minimum(int(time_target/dt), ndt-1)
 time = it*dt
 print(str(it))
 amax1 = 0.05 * np.max(np.abs(p.data[it,:,:]))
