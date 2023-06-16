@@ -5,6 +5,7 @@ from examples.seismic import TimeAxis, RickerSource, Receiver, demo_model
 from examples.seismic.model import SeismicModel
 from matplotlib import pyplot as plt
 from matplotlib import rcParams
+import json
 rcParams['font.size'] = 12
 px = 1/plt.rcParams['figure.dpi']  # pixel in inches
 
@@ -47,15 +48,15 @@ m = model.m
 
 # Compute Tmax (just before wave reach border)
 vh = vp*np.sqrt(1+2*eps)
-vn = vp*np.sqrt(1+2*delta)
+vn = vp*np.sqrt(1+2*delt)
 # max velocity
 vmax = np.maximum(vh,vn)
 # dimension length
-xmax = (nx * spacing[0])/2
+xmax = ((nx-1) * spacing[0])/2.
 xmin = -xmax
-ymax = (ny * spacing[1])/2
+ymax = ((ny-1) * spacing[1])/2.
 ymin = -ymax
-zmax = (nz * spacing[2])/2
+zmax = ((nz-1) * spacing[2])/2.
 zmin = -zmax
 min_horiz_dist= np.min([np.abs(xmax),np.abs(ymax), np.abs(xmin), np.abs(ymin)])
 #Time before wave reaches border
@@ -64,20 +65,23 @@ min_vert_dist= np.minimum(np.abs(zmax),np.abs(zmin))
 Tn = min_vert_dist / vn # time to reach top or bottom border
 # Choose T max such that wave just reach border (but less than 1 seconds)
 Tmax = np.around(np.minimum(Th, Tn), decimals = 3)
-Tmax = np.minimum(Tmax, 1)
+Tmax = np.minimum(Tmax, 1000)
 # round from dt
 
 # Compute the dt and set time range
 t0 = 0.   #  Simulation time start
-tn = 840. #  Simulation time end (0.15 second = 150 msec)
+
 dt = model.critical_dt
 # round Tmax to be a multiple of dt
+print('Tmax = ', Tmax)
 Tmax = int(Tmax/dt)*(dt) 
 Tmax = np.around(Tmax, decimals=4)
+ndt_approx = int(Tmax/dt)
 print('Tmax = ', Tmax)
 
+
 # dt = (dvalue/(np.pi*vmax))*np.sqrt(1/(1+etamax*(max_cos_sin)**2)) # eq. above (cell 3)
-time_range = TimeAxis(start=t0,stop=tn,step=dt)
+time_range = TimeAxis(start=t0,stop=Tmax,step=dt)
 print("time_range; ", time_range)
 
 # NBVAL_IGNORE_OUTPUT
@@ -102,8 +106,8 @@ src.coordinates.data[:,0] = model.domain_size[0]* .5
 src.coordinates.data[:,1] = model.domain_size[1]* .5
 src.coordinates.data[:,2] = model.domain_size[2]* .5
 # Define the source injection
-src_term = src.inject(field=p.forward,expr=src * dt**2 / m)
-src_term_q = src.inject(field=q.forward,expr=src * dt**2 / m)
+src_term   = src.inject(field=p.forward, expr = -src*dt**2/m )
+src_term_q = src.inject(field=q.forward, expr = -src*dt**2/m )
 
 rec  = Receiver(name='rec',grid=model.grid,npoint=shape[0],time_range=time_range)
 rec.coordinates.data[:, 0] = np.linspace(model.origin[0],model.domain_size[0], num=model.shape[0])
@@ -125,38 +129,45 @@ shape_pad   = np.array(shape) + 2 * nbl
 origin_pad  = tuple([o - s*nbl for o, s in zip(origin, spacing)])
 extent_pad  = tuple([s*(n-1) for s, n in zip(spacing, shape_pad)])
 
-# Plot
 
-# Note: flip sense of second dimension to make the plot positive downwards
-plt_extent = [origin_pad[0] - extent_pad[0]/2, origin_pad[0] + extent_pad[0]/2,
-              origin_pad[1] - extent_pad[1]/2, origin_pad[1] + extent_pad[1]/2]
-
-
-time_target = 820
+#time_target = 820
+ix = int(nx/2)
 iy = int(ny/2)
+iz = int(nz/2)
 ndt = p.data.shape[0]
-it = 1 #np.minimum(int(time_target/dt), ndt-1)
-time = it*dt
-print(str(it))
-amax1 = 0.05 * np.max(np.abs(p.data[it,:,:]))
-amax2=np.percentile(np.abs(p.data[it,::]), 99.5)
+print("p.data.shape" + str(p.data.shape))
+it = 3 #np.minimum(int(time_target/dt), ndt-1)
+time = Tmax
 
-
-fig, ax = plt.subplots(figsize=(800*px, 600*px))
-pos = ax.imshow(np.transpose(p.data[it,:,iy,:]), cmap="seismic", vmin=-amax2, vmax=+amax2, extent=plt_extent)
-ax.plot(model.domain_size[0]*.5, model.domain_size[1]* .5, \
-       'red', linestyle='None', marker='*', markersize=8, label="Source")
-ax.tick_params('both', length=2, width=0.5, which='major',labelsize=10)
-ax.set_title("Devito: Wavefield at t="+str(format(time, '.2f'))+"ms with sigma="+str(sigma))
-ax.set_xlabel("X Coordinate (m)")
-ax.set_ylabel("Z Coordinate (m)")
-ax.grid()
-fig.colorbar(pos, ax=ax)
-
-figtitle = "devito-fletcher-3D-sigma"+str(sigma)+".png"
-print("Saving figure as ... " + figtitle)
-fig.savefig(figtitle)
-print("done")
 
 ###
+data = {}
+data["nx"] = nx
+data["ny"] = ny
+data["nz"] = nz
+data["xmax"] = xmax
+data["xmin"] = xmin
+data["ymax"] = ymax
+data["ymin"] = ymin
+data["zmax"] = zmax
+data["zmin"] = zmin
 
+data["ix"] = ix
+data["iy"] = iy
+data["iz"] = iz
+
+
+data["dt"] = float(dt)
+data["Tmax"] = Tmax
+data["sigma"] = sigma
+data["epsilon"] = eps
+data["delta"] = delt
+data["vti_f"] = vti_f
+data["vp"] = vp
+data["freq"] = freq
+
+filename = "devito-fletcher-3D-sigma"+str(sigma)
+with open(filename + ".json", 'w', encoding='utf-8') as f:
+  json.dump(data, f, ensure_ascii=False, indent=4)
+
+np.save(filename, p.data[2, ::])
