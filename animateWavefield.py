@@ -82,7 +82,7 @@ anim = animation.FuncAnimation(
                                frames = ndt,
                                interval = 200, # in ms
                                )
-anim.save('wavefield-xz.mp4', fps=fps, extra_args=['-vcodec', 'libx264'])
+anim.save('wavefield-xz', fps=fps)
 
 # XY plane
 pressure = pxy
@@ -101,7 +101,7 @@ anim = animation.FuncAnimation(
                                frames = ndt,
                                interval = 200, # in ms
                                )
-anim.save('wavefield-xy.mp4', fps=fps, extra_args=['-vcodec', 'libx264'])
+anim.save('wavefield-xy', fps=fps)
 
 print('Done!')
 

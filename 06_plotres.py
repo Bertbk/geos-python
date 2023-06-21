@@ -69,7 +69,7 @@ ax.set_ylabel("Z Coordinate (m)")
 ax.grid()
 fig.colorbar(pos, ax=ax)
 
-figtitle = "geos-sigma-xz-"+str(sigma)+".png"
+figtitle = "geos-xz-sigma-"+str(sigma)+".png"
 print("Saving figure as ... " + figtitle)
 fig.savefig(figtitle)
 print("done xz" )
@@ -85,7 +85,7 @@ ax.set_ylabel("Z Coordinate (m)")
 ax.grid()
 fig.colorbar(pos, ax=ax)
 
-figtitle = "geos-sigma-yz-"+str(sigma)+".png"
+figtitle = "geos-yz-sigma-"+str(sigma)+".png"
 print("Saving figure as ... " + figtitle)
 fig.savefig(figtitle)
 print("done xy")
@@ -101,7 +101,7 @@ ax.set_ylabel("Y Coordinate (m)")
 ax.grid()
 fig.colorbar(pos, ax=ax)
 
-figtitle = "geos-sigma-xy-"+str(sigma)+".png"
+figtitle = "geos-xy-sigma-"+str(sigma)+".png"
 print("Saving figure as ... " + figtitle)
 fig.savefig(figtitle)
 print("done xy")
