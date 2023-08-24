@@ -21,7 +21,7 @@ with open(jsonfile) as f:
 
 # get results
 f=h5py.File(hdf5file)
-p=np.array(f['pressure_np1'])
+p=np.array(f['pressure_p_np1'])
 f.close()
 
 print("p old shape = " + str(p.shape))
