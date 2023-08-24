@@ -13,7 +13,7 @@ rcParams['font.size'] = 12
 px = 1/plt.rcParams['figure.dpi']  # pixel in inches
 
 # get Args
-parser = argparse.ArgumentParser(description='Cut a hdf5 file using JSON data. Warning: override of JSON file')
+parser = argparse.ArgumentParser(description='Plot results for VTI assuming .npy files exist')
 parser.add_argument('-json', help='input json filename', default="data.json")
 args = parser.parse_args()
 jsonfile = args.json
