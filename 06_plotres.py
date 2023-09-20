@@ -15,7 +15,7 @@ px = 1/plt.rcParams['figure.dpi']  # pixel in inches
 # get Args
 parser = argparse.ArgumentParser(description='Plot results for VTI assuming .npy files exist')
 parser.add_argument('-json', help='input json filename', default="data.json")
-parser.add_argument('-t', help='Start Time', default="[0.8]")
+parser.add_argument('-t', help='Start Time', default="0.8")
 parser.add_argument('-n', help='Number of screenshot', default="1")
 args = parser.parse_args()
 jsonfile = args.json
