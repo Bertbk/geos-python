@@ -19,8 +19,8 @@ parser.add_argument('-t', help='Start Time', default="[0.8]")
 parser.add_argument('-n', help='Number of screenshot', default="1")
 args = parser.parse_args()
 jsonfile = args.json
-time_start = args.t
-nshots = args.n
+time_start = float(args.t)
+nshots = int(args.n)
 
 # get data
 with open(jsonfile, mode="r") as f:
