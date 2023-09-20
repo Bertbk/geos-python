@@ -86,7 +86,7 @@ for it in tshots:
   ax.grid()
   fig.colorbar(pos, ax=ax)
 
-  figtitle = "geos-xz-sigma-"+str(sigma)+".png"
+  figtitle = "geos-xz-sigma-"+str(sigma)+"-t-"+str(np.floor(time*1000))+".png"
   print("Saving figure as ... " + figtitle)
   fig.savefig(figtitle)
 
@@ -101,7 +101,7 @@ for it in tshots:
   ax.grid()
   fig.colorbar(pos, ax=ax)
 
-  figtitle = "geos-yz-sigma-"+str(sigma)+".png"
+  figtitle = "geos-yz-sigma-"+str(sigma)+"-t-"+str(np.floor(time*1000))+".png"
   print("Saving figure as ... " + figtitle)
   fig.savefig(figtitle)
 
@@ -116,7 +116,7 @@ for it in tshots:
   ax.grid()
   fig.colorbar(pos, ax=ax)
 
-  figtitle = "geos-xy-sigma-"+str(sigma)+".png"
+  figtitle = "geos-xy-sigma-"+str(sigma)+"-t-"+str(np.floor(time*1000))+".png"
   print("Saving figure as ... " + figtitle)
   fig.savefig(figtitle)
   
