@@ -15,8 +15,12 @@ px = 1/plt.rcParams['figure.dpi']  # pixel in inches
 # get Args
 parser = argparse.ArgumentParser(description='Plot results for VTI assuming .npy files exist')
 parser.add_argument('-json', help='input json filename', default="data.json")
+parser.add_argument('-t', help='Start Time', default="[0.8]")
+parser.add_argument('-n', help='Number of screenshot', default="1")
 args = parser.parse_args()
 jsonfile = args.json
+time_start = args.t
+nshots = args.n
 
 # get data
 with open(jsonfile, mode="r") as f:
@@ -54,54 +58,65 @@ print("pyz.shape = " + str(pyz.shape))
 ndt = pyz.shape[0]
 
 # Save fig
-time_target = 0.82 # in seconds
-it = np.minimum(int(time_target/dt), ndt-2)
-time = it*dt
+it_start = np.minimum(int(time_start/dt), ndt-2)
+time_start = it_start*dt
+if(it_start == ndt-2):
+  print("Time start is too large, time = "+time_start)
+else:
+  print("Time start= "+time_start)
 
-# XZ plane
-vmax=np.percentile(np.abs(pxz[it,::]), 99.5)
-fig, ax = plt.subplots(figsize=(800*px, 600*px))
-pos = ax.imshow(np.transpose(pxz[it,:,:]),vmin=-vmax,vmax=vmax,cmap='seismic', extent=[xmin, xmax, zmin, zmax])
-ax.tick_params('both', length=2, width=0.5, which='major',labelsize=10)
-ax.set_title("GEOS: Wavefield at t="+str(format(time*1000., '.2f'))+"ms with sigma="+str(sigma))
-ax.set_xlabel("X Coordinate (m)")
-ax.set_ylabel("Z Coordinate (m)")
-ax.grid()
-fig.colorbar(pos, ax=ax)
+if( nshots > (ndt - it_start)):
+  nshots = ndt - it_start;
 
-figtitle = "geos-xz-sigma-"+str(sigma)+".png"
-print("Saving figure as ... " + figtitle)
-fig.savefig(figtitle)
-print("done xz" )
+tshots = np.linspace(it_start, ndt - 2, 10, dtype=int)
 
-# YZ plane
-vmax=np.percentile(np.abs(pyz[it,::]), 99.5)
-fig, ax = plt.subplots(figsize=(800*px, 600*px))
-pos = ax.imshow(np.transpose(pyz[it,:,:]),vmin=-vmax,vmax=vmax,cmap='seismic', extent=[ymin, ymax, zmin, zmax])
-ax.tick_params('both', length=2, width=0.5, which='major',labelsize=10)
-ax.set_title("GEOS: Wavefield at t="+str(format(time*1000., '.2f'))+"ms with sigma="+str(sigma))
-ax.set_xlabel("Y Coordinate (m)")
-ax.set_ylabel("Z Coordinate (m)")
-ax.grid()
-fig.colorbar(pos, ax=ax)
 
-figtitle = "geos-yz-sigma-"+str(sigma)+".png"
-print("Saving figure as ... " + figtitle)
-fig.savefig(figtitle)
-print("done xy")
+for it in tshots:
+  time = it*dt
+  print("Printing fig for time=" +str(format(time*1000., '.2f'))+"ms")
 
-# XY plane
-vmax=np.percentile(np.abs(pxy[it,::]), 99.5)
-fig, ax = plt.subplots(figsize=(800*px, 600*px))
-pos = ax.imshow(np.transpose(pxy[it,:,:]),vmin=-vmax,vmax=vmax,cmap='seismic', extent=[xmin, xmax, ymin, ymax])
-ax.tick_params('both', length=2, width=0.5, which='major',labelsize=10)
-ax.set_title("GEOS: Wavefield at t="+str(format(time*1000., '.2f'))+"ms with sigma="+str(sigma))
-ax.set_xlabel("X Coordinate (m)")
-ax.set_ylabel("Y Coordinate (m)")
-ax.grid()
-fig.colorbar(pos, ax=ax)
+  # XZ plane
+  vmax=np.percentile(np.abs(pxz[it,::]), 99.5)
+  fig, ax = plt.subplots(figsize=(800*px, 600*px))
+  pos = ax.imshow(np.transpose(pxz[it,:,:]),vmin=-vmax,vmax=vmax,cmap='seismic', extent=[xmin, xmax, zmin, zmax])
+  ax.tick_params('both', length=2, width=0.5, which='major',labelsize=10)
+  ax.set_title("GEOS: Wavefield at t="+str(format(time*1000., '.2f'))+"ms with sigma="+str(sigma))
+  ax.set_xlabel("X Coordinate (m)")
+  ax.set_ylabel("Z Coordinate (m)")
+  ax.grid()
+  fig.colorbar(pos, ax=ax)
 
-figtitle = "geos-xy-sigma-"+str(sigma)+".png"
-print("Saving figure as ... " + figtitle)
-fig.savefig(figtitle)
-print("done xy")
+  figtitle = "geos-xz-sigma-"+str(sigma)+".png"
+  print("Saving figure as ... " + figtitle)
+  fig.savefig(figtitle)
+
+  # YZ plane
+  vmax=np.percentile(np.abs(pyz[it,::]), 99.5)
+  fig, ax = plt.subplots(figsize=(800*px, 600*px))
+  pos = ax.imshow(np.transpose(pyz[it,:,:]),vmin=-vmax,vmax=vmax,cmap='seismic', extent=[ymin, ymax, zmin, zmax])
+  ax.tick_params('both', length=2, width=0.5, which='major',labelsize=10)
+  ax.set_title("GEOS: Wavefield at t="+str(format(time*1000., '.2f'))+"ms with sigma="+str(sigma))
+  ax.set_xlabel("Y Coordinate (m)")
+  ax.set_ylabel("Z Coordinate (m)")
+  ax.grid()
+  fig.colorbar(pos, ax=ax)
+
+  figtitle = "geos-yz-sigma-"+str(sigma)+".png"
+  print("Saving figure as ... " + figtitle)
+  fig.savefig(figtitle)
+
+  # XY plane
+  vmax=np.percentile(np.abs(pxy[it,::]), 99.5)
+  fig, ax = plt.subplots(figsize=(800*px, 600*px))
+  pos = ax.imshow(np.transpose(pxy[it,:,:]),vmin=-vmax,vmax=vmax,cmap='seismic', extent=[xmin, xmax, ymin, ymax])
+  ax.tick_params('both', length=2, width=0.5, which='major',labelsize=10)
+  ax.set_title("GEOS: Wavefield at t="+str(format(time*1000., '.2f'))+"ms with sigma="+str(sigma))
+  ax.set_xlabel("X Coordinate (m)")
+  ax.set_ylabel("Y Coordinate (m)")
+  ax.grid()
+  fig.colorbar(pos, ax=ax)
+
+  figtitle = "geos-xy-sigma-"+str(sigma)+".png"
+  print("Saving figure as ... " + figtitle)
+  fig.savefig(figtitle)
+  
