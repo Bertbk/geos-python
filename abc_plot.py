@@ -55,10 +55,14 @@ zscale = np.linspace(zmin, zmax, num =nz, endpoint=True)
 
 # load pressure files
 #pyz = np.load("pyz.npy")
-pxz = np.load("pxz.npy")
-pxy = np.load("pxy.npy")
-print("pxz.shape = " + str(pxz.shape))
-ndt = pxz.shape[0]
+pxz_vti = np.load("pxz_vti.npy")
+pxy_vti = np.load("pxy_vti.npy")
+
+pxz_iso = np.load("pxz_iso.npy")
+pxy_iso = np.load("pxy_iso.npy")
+
+print("pxz.shape = " + str(pxz_vti.shape))
+ndt = pxz_vti.shape[0]
 
 # Save fig
 it_start = np.minimum(int(time_start/dt), ndt-2)
@@ -78,52 +82,58 @@ if(is_animated):
   ims = []
 
 
-fig, (ax_xz, ax_xy) = plt.subplots(1,2, figsize=(1600*px, 600*px))
-ax_xz.set_xlabel("X Coordinate (m)")
-ax_xz.set_ylabel("Z Coordinate (m)")
-ax_xy.set_xlabel("X Coordinate (m)")
-ax_xy.set_ylabel("Y Coordinate (m)")
-ax_xz.grid()
-ax_xy.grid()
+fig, ((axIso_xz, axVti_xz), (axIso_xy, axVti_xy))  = plt.subplots(2,2, figsize=(1600*px, 1200*px))
+axIso_xz.set_xlabel("X Coordinate (m)")
+axIso_xz.set_ylabel("Z Coordinate (m)")
+axIso_xz.grid()
+axIso_xy.set_xlabel("X Coordinate (m)")
+axIso_xy.set_ylabel("Y Coordinate (m)")
+axIso_xy.grid()
+axVti_xz.set_xlabel("X Coordinate (m)")
+axVti_xz.set_ylabel("Z Coordinate (m)")
+axVti_xz.grid()
+axVti_xy.set_xlabel("X Coordinate (m)")
+axVti_xy.set_ylabel("Y Coordinate (m)")
+axVti_xy.grid()
 
-
+axIso_xz.set_title("Isotropic ABC")
+axVti_xz.set_title("Tuned ABC")
+# XZ plane
+vmaxIso=np.percentile(np.abs(pxz_iso[tshots[0],::]), 99.5)
+vmaxVti=np.percentile(np.abs(pxz_vti[tshots[0],::]), 99.5)
+vmax = vmaxIso
 
 for idit, it in enumerate(tshots):
   time = it*dt
   print("Printing fig for time=" +str(format(time*1000., '.2f'))+"ms")
   fig.suptitle("GEOS: Wavefield at t="+str(format(time*1000., '.2f'))+"ms")
-  # XZ plane
-  vmax=np.percentile(np.abs(pxz[it,::]), 99.5)
-  ax_xz.tick_params('both', length=2, width=0.5, which='major',labelsize=10)
-  pos_xz = ax_xz.imshow(np.transpose(pxz[it,:,:]),vmin=-vmax,vmax=vmax,cmap='seismic', extent=[xmin, xmax, zmin, zmax], animated=True )
+
+  axIso_xz.tick_params('both', length=2, width=0.5, which='major',labelsize=10)
+  posIso_xz = axIso_xz.imshow(np.transpose(pxz_iso[it,:,:]),vmin=-vmax,vmax=vmax,cmap='seismic', extent=[xmin, xmax, zmin, zmax], animated=True )
   if(idit == 0):
-    fig.colorbar(pos_xz, ax=ax_xz)
+    fig.colorbar(posIso_xz, ax=axIso_xz)
 
-
-  # # YZ plane
-  # vmax=np.percentile(np.abs(pyz[it,::]), 99.5)
-  # fig, ax = plt.subplots(figsize=(800*px, 600*px))
-  # pos = ax.imshow(np.transpose(pyz[it,:,:]),vmin=-vmax,vmax=vmax,cmap='seismic', extent=[ymin, ymax, zmin, zmax])
-  # ax.tick_params('both', length=2, width=0.5, which='major',labelsize=10)
-  # ax.set_title("GEOS: Wavefield at t="+str(format(time*1000., '.2f'))+"ms")
-  # ax.set_xlabel("Y Coordinate (m)")
-  # ax.set_ylabel("Z Coordinate (m)")
-  # ax.grid()
-  # fig.colorbar(pos, ax=ax)
-
-  # XY plane
-  vmax=np.percentile(np.abs(pxy[it,::]), 99.5)
-  pos_xy = ax_xy.imshow(np.transpose(pxy[it,:,:]),vmin=-vmax,vmax=vmax,cmap='seismic', extent=[xmin, xmax, ymin, ymax], animated=True )
-  ax_xy.tick_params('both', length=2, width=0.5, which='major',labelsize=10)
+  axVti_xz.tick_params('both', length=2, width=0.5, which='major',labelsize=10)
+  posVti_xz = axVti_xz.imshow(np.transpose(pxz_vti[it,:,:]),vmin=-vmax,vmax=vmax,cmap='seismic', extent=[xmin, xmax, zmin, zmax], animated=True )
   if(idit == 0):
-    fig.colorbar(pos_xy, ax=ax_xy)
+    fig.colorbar(posVti_xz, ax=axVti_xz)
 
-  figtitle = "geos-t-"+str(np.floor(time*1000))+".png"
+  axIso_xy.tick_params('both', length=2, width=0.5, which='major',labelsize=10)
+  posIso_xy = axIso_xy.imshow(np.transpose(pxy_iso[it,:,:]),vmin=-vmax,vmax=vmax,cmap='seismic', extent=[xmin, xmax, zmin, zmax], animated=True )
+  if(idit == 0):
+    fig.colorbar(posIso_xy, ax=axIso_xy)
+
+  axVti_xy.tick_params('both', length=2, width=0.5, which='major',labelsize=10)
+  posVti_xy = axVti_xy.imshow(np.transpose(pxy_vti[it,:,:]),vmin=-vmax,vmax=vmax,cmap='seismic', extent=[xmin, xmax, zmin, zmax], animated=True )
+  if(idit == 0):
+    fig.colorbar(posVti_xy, ax=axVti_xy)
+
+  figtitle = "ABC-comparison-t-"+str(np.floor(time*1000))+".png"
   print("Saving figure as ... " + figtitle)
   fig.savefig(figtitle)
 
   if(is_animated):
-    ims.append([pos_xz, pos_xy])
+    ims.append([posIso_xz, posVti_xz, posIso_xy, posVti_xy])
 
 # ========================== Animate
 # ims is a list of lists, each row is a list of artists to draw in the
